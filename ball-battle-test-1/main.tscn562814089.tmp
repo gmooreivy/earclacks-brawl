@@ -1,0 +1,86 @@
+[gd_scene load_steps=5 format=3 uid="uid://dn383qa0q1neu"]
+
+[ext_resource type="PackedScene" uid="uid://b4acr13ihjgi7" path="res://ball.tscn" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://bqrm46wx2otlh" path="res://wall.tscn" id="2_0xm2m"]
+[ext_resource type="Texture2D" uid="uid://dva0kxsbylewq" path="res://ballGrey.png" id="2_h2yge"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0xm2m"]
+size = Vector2(23.999996, 701)
+
+[node name="Main" type="Node"]
+
+[node name="Ball" parent="." instance=ExtResource("1_ig7tw")]
+position = Vector2(729.99994, 441)
+
+[node name="Sprite2D2" type="Sprite2D" parent="Ball"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_h2yge")
+
+[node name="Ball2" parent="." instance=ExtResource("1_ig7tw")]
+position = Vector2(1164.9999, 442.99997)
+
+[node name="Sprite2D" type="Sprite2D" parent="Ball2"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_h2yge")
+
+[node name="WallGroup" type="Node" parent="."]
+
+[node name="Wall1" parent="WallGroup" instance=ExtResource("2_0xm2m")]
+position = Vector2(368, 600)
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="WallGroup/Wall1"]
+position = Vector2(592, 300)
+rotation = 1.5707964
+shape = SubResource("RectangleShape2D_0xm2m")
+
+[node name="Line2D2" type="Line2D" parent="WallGroup/Wall1"]
+position = Vector2(2.2912903, -124.99999)
+scale = Vector2(4.993288, 5)
+points = PackedVector2Array(187.4, 84.99999, 48.4, 84.99999)
+width = 5.0
+default_color = Color(0.16924527, 0.1692453, 0.16924527, 1)
+
+[node name="Wall2" parent="WallGroup" instance=ExtResource("2_0xm2m")]
+position = Vector2(368, 600)
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="WallGroup/Wall2"]
+position = Vector2(601.5, -420)
+rotation = 1.5707964
+shape = SubResource("RectangleShape2D_0xm2m")
+
+[node name="Line2D2" type="Line2D" parent="WallGroup/Wall2"]
+position = Vector2(255.38333, -419.99994)
+scale = Vector2(5.0833344, 5)
+points = PackedVector2Array(134.39998, -1.5258789e-05, 0.40000153, -1.5258789e-05)
+width = 5.0
+default_color = Color(0.16924527, 0.1692453, 0.16924527, 1)
+
+[node name="Wall3" parent="WallGroup" instance=ExtResource("2_0xm2m")]
+position = Vector2(368, 600)
+
+[node name="Line2D3" type="Line2D" parent="WallGroup/Wall3"]
+position = Vector2(1337.3384, -218.86621)
+rotation = 1.5707964
+scale = Vector2(5.085678, 4.8914447)
+points = PackedVector2Array(104.4, 84, -41.999992, 84)
+width = 5.0
+default_color = Color(0.16924527, 0.1692453, 0.16924527, 1)
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="WallGroup/Wall3"]
+position = Vector2(257, -60)
+shape = SubResource("RectangleShape2D_0xm2m")
+
+[node name="Wall4" parent="WallGroup" instance=ExtResource("2_0xm2m")]
+position = Vector2(368, 600)
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="WallGroup/Wall4"]
+position = Vector2(927, -60)
+shape = SubResource("RectangleShape2D_0xm2m")
+
+[node name="Line2D2" type="Line2D" parent="WallGroup/Wall4"]
+position = Vector2(-0.77717745, -132.5587)
+rotation = 1.5707964
+scale = Vector2(5.083986, 5.0495925)
+points = PackedVector2Array(84.99999, -51, -59, -50.999992)
+width = 5.0
+default_color = Color(0.16924527, 0.1692453, 0.16924527, 1)

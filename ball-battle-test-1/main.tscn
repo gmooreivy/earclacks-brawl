@@ -1,0 +1,153 @@
+[gd_scene load_steps=9 format=3 uid="uid://dn383qa0q1neu"]
+
+[ext_resource type="Script" uid="uid://c50f0pk4srlf1" path="res://main.gd" id="1_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://b4acr13ihjgi7" path="res://ball.tscn" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://bqrm46wx2otlh" path="res://wall.tscn" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://gmgjokmp6mvv" path="res://spear.tscn" id="2_h2yge"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_1bvp3"]
+font_size = 32
+
+[sub_resource type="LabelSettings" id="LabelSettings_lquwl"]
+font_size = 32
+
+[sub_resource type="LabelSettings" id="LabelSettings_7mycd"]
+font_size = 32
+
+[sub_resource type="LabelSettings" id="LabelSettings_272bh"]
+font_size = 32
+
+[node name="Main" type="Node"]
+script = ExtResource("1_1bvp3")
+
+[node name="BallContainer1" type="CanvasLayer" parent="."]
+
+[node name="CanvasModulate" type="CanvasModulate" parent="BallContainer1"]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(109.999985, 83.999985)
+scale = Vector2(9.999998, 9.999998)
+color = Color(0.36378342, 1.1131179, 1.4689999, 1)
+
+[node name="Ball1" parent="BallContainer1/CanvasModulate" instance=ExtResource("1_ig7tw")]
+position = Vector2(65, 45)
+scale = Vector2(0.1, 0.1)
+collision_mask = 26
+linear_velocity = Vector2(250, -25)
+
+[node name="spear1" parent="BallContainer1/CanvasModulate/Ball1" instance=ExtResource("2_h2yge")]
+show_behind_parent = true
+position = Vector2(0, 6.1035156e-05)
+collision_layer = 4
+collision_mask = 10
+
+[node name="label1" type="Label" parent="BallContainer1/CanvasModulate/Ball1"]
+offset_left = -35.0
+offset_top = -20.000002
+offset_right = 5.0
+offset_bottom = 2.999998
+scale = Vector2(1.75, 1.75)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+text = "100"
+horizontal_alignment = 1
+
+[node name="BallContainer2" type="CanvasLayer" parent="."]
+
+[node name="CanvasModulate" type="CanvasModulate" parent="BallContainer2"]
+position = Vector2(109.999985, 83.999985)
+scale = Vector2(9.999998, 9.999998)
+color = Color(0.897312, 0, 0.34278673, 1)
+
+[node name="Ball2" parent="BallContainer2/CanvasModulate" instance=ExtResource("1_ig7tw")]
+position = Vector2(110, 45)
+scale = Vector2(0.10000002, 0.10000002)
+collision_layer = 2
+collision_mask = 21
+linear_velocity = Vector2(250, -25)
+
+[node name="spear2" parent="BallContainer2/CanvasModulate/Ball2" instance=ExtResource("2_h2yge")]
+show_behind_parent = true
+collision_layer = 8
+collision_mask = 5
+
+[node name="label2" type="Label" parent="BallContainer2/CanvasModulate/Ball2"]
+offset_left = -35.0
+offset_top = -20.000002
+offset_right = 5.0
+offset_bottom = 2.999998
+scale = Vector2(1.75, 1.75)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+text = "100"
+horizontal_alignment = 1
+
+[node name="WallGroup" type="Node" parent="."]
+
+[node name="Wall1" parent="WallGroup" instance=ExtResource("2_0xm2m")]
+position = Vector2(1325, 539)
+rotation = 1.5707964
+
+[node name="Wall2" parent="WallGroup" instance=ExtResource("2_0xm2m")]
+position = Vector2(669, 539)
+rotation = 1.5707964
+
+[node name="Wall3" parent="WallGroup" instance=ExtResource("2_0xm2m")]
+position = Vector2(996, 212)
+
+[node name="Wall4" parent="WallGroup" instance=ExtResource("2_0xm2m")]
+position = Vector2(996, 869)
+
+[node name="attackTimeout" type="Timer" parent="."]
+wait_time = 0.125
+
+[node name="GUI" type="CanvasLayer" parent="."]
+
+[node name="CanvasLayer" type="CanvasModulate" parent="GUI"]
+
+[node name="dmg1" type="Label" parent="GUI/CanvasLayer"]
+anchors_preset = -1
+anchor_right = 0.08400001
+anchor_bottom = 0.021000002
+offset_left = 448.0
+offset_top = 744.0
+offset_right = 449.0
+offset_bottom = 789.0
+label_settings = SubResource("LabelSettings_1bvp3")
+vertical_alignment = 1
+
+[node name="sclr1" type="Label" parent="GUI/CanvasLayer"]
+anchors_preset = -1
+anchor_right = 0.158
+anchor_bottom = 0.19000001
+offset_left = 448.0
+offset_top = 704.0
+offset_right = 448.99997
+offset_bottom = 749.0
+label_settings = SubResource("LabelSettings_lquwl")
+
+[node name="GUI2" type="CanvasLayer" parent="."]
+
+[node name="CanvasLayer2" type="CanvasModulate" parent="GUI2"]
+
+[node name="sclr2" type="Label" parent="GUI2/CanvasLayer2"]
+offset_left = 1368.0
+offset_top = 744.0
+offset_right = 1536.0
+offset_bottom = 808.0
+label_settings = SubResource("LabelSettings_7mycd")
+
+[node name="dmg2" type="Label" parent="GUI2/CanvasLayer2"]
+offset_left = 1368.0
+offset_top = 704.0
+offset_right = 1536.0
+offset_bottom = 768.0
+label_settings = SubResource("LabelSettings_272bh")
+
+[connection signal="hit_timeout" from="." to="BallContainer1/CanvasModulate/Ball1" method="_on_hit_timeout"]
+[connection signal="hit_timeout" from="." to="BallContainer2/CanvasModulate/Ball2" method="_on_hit_timeout"]
+[connection signal="weapon_attack" from="BallContainer1/CanvasModulate/Ball1/spear1" to="." method="_on_weapon_attack"]
+[connection signal="weapon_parry" from="BallContainer1/CanvasModulate/Ball1/spear1" to="." method="_on_weapon_parry"]
+[connection signal="weapon_attack" from="BallContainer2/CanvasModulate/Ball2/spear2" to="." method="_on_weapon_attack"]
+[connection signal="weapon_parry" from="BallContainer2/CanvasModulate/Ball2/spear2" to="." method="_on_weapon_parry"]
+[connection signal="timeout" from="attackTimeout" to="." method="_on_attack_timeout_timeout"]

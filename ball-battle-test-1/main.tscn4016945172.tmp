@@ -1,0 +1,68 @@
+[gd_scene load_steps=3 format=3 uid="uid://dn383qa0q1neu"]
+
+[ext_resource type="PackedScene" uid="uid://b4acr13ihjgi7" path="res://ball.tscn" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://bqrm46wx2otlh" path="res://wall.tscn" id="2_0xm2m"]
+
+[node name="Main" type="Node"]
+
+[node name="BallContainer1" type="CanvasLayer" parent="."]
+
+[node name="CanvasModulate" type="CanvasModulate" parent="BallContainer1"]
+position = Vector2(109.999985, 83.999985)
+scale = Vector2(9.999998, 9.999998)
+color = Color(0, 1.4687854, 1.4447129, 1)
+
+[node name="Ball2" parent="BallContainer1/CanvasModulate" instance=ExtResource("1_ig7tw")]
+position = Vector2(114.00002, 42.600006)
+scale = Vector2(0.1, 0.1)
+linear_velocity = Vector2(250, -25)
+
+[node name="Label" type="Label" parent="BallContainer1/CanvasModulate/Ball2"]
+offset_left = -35.0
+offset_top = -20.000002
+offset_right = 5.0
+offset_bottom = 2.999998
+scale = Vector2(1.75, 1.75)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+text = "100"
+horizontal_alignment = 1
+
+[node name="BallContainer2" type="CanvasLayer" parent="."]
+
+[node name="CanvasModulate" type="CanvasModulate" parent="BallContainer2"]
+position = Vector2(109.999985, 83.999985)
+scale = Vector2(9.999998, 9.999998)
+color = Color(0.6862745, 0, 1, 1)
+
+[node name="Ball" parent="BallContainer2/CanvasModulate" instance=ExtResource("1_ig7tw")]
+position = Vector2(64.000015, 42.600006)
+scale = Vector2(0.10000002, 0.10000002)
+linear_velocity = Vector2(250, -25)
+
+[node name="Label" type="Label" parent="BallContainer2/CanvasModulate/Ball"]
+offset_left = -35.0
+offset_top = -20.000002
+offset_right = 5.0
+offset_bottom = 2.999998
+scale = Vector2(1.75, 1.75)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+text = "100"
+horizontal_alignment = 1
+
+[node name="WallGroup" type="Node" parent="."]
+
+[node name="Wall1" parent="WallGroup" instance=ExtResource("2_0xm2m")]
+position = Vector2(1325, 539)
+rotation = 1.5707964
+
+[node name="Wall2" parent="WallGroup" instance=ExtResource("2_0xm2m")]
+position = Vector2(669, 539)
+rotation = 1.5707964
+
+[node name="Wall3" parent="WallGroup" instance=ExtResource("2_0xm2m")]
+position = Vector2(996, 212)
+
+[node name="Wall4" parent="WallGroup" instance=ExtResource("2_0xm2m")]
+position = Vector2(996, 869)
