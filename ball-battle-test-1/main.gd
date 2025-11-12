@@ -32,6 +32,17 @@ func _process(float) -> void:
 	sclr2.text = str(spear2.scalarattr, ": ", spear2.scalar + 1)
 	dmg2.text = str("Damage: ", spear2.damage)
 	
+	if(ball1.health <= 0):
+		end_game('ball2')
+	else: if(ball2.health <= 0):
+		end_game('ball1')
+	
+	
+func end_game(winner):
+	if(winner == 'ball1'):
+		ball2.queue_free()
+	else:
+		ball1.queue_free()
 		
 func hit_pause(timeScale, duration):
 #	Credits to Master Albert on youtube
