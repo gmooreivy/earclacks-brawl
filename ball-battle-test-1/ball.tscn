@@ -12,7 +12,6 @@ radius = 105.752884
 
 [node name="Ball" type="RigidBody2D"]
 collision_mask = 7
-mass = 0.25
 physics_material_override = SubResource("PhysicsMaterial_x8fbi")
 script = ExtResource("1_x8fbi")
 
