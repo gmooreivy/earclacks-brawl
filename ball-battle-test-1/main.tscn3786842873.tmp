@@ -15,28 +15,6 @@ font_size = 48
 [node name="Main" type="Node"]
 script = ExtResource("1_1bvp3")
 
-[node name="label1" type="Label" parent="."]
-offset_left = 724.9999
-offset_top = 513.9999
-offset_right = 764.9999
-offset_bottom = 536.9999
-scale = Vector2(1.75, 1.75)
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
-text = "100"
-horizontal_alignment = 1
-
-[node name="label2" type="Label" parent="."]
-offset_left = 1174.9998
-offset_top = 513.9999
-offset_right = 1214.9998
-offset_bottom = 536.9999
-scale = Vector2(1.75, 1.75)
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
-text = "100"
-horizontal_alignment = 1
-
 [node name="WallGroup" type="Node" parent="."]
 
 [node name="Wall1" parent="WallGroup" instance=ExtResource("2_0xm2m")]
@@ -62,12 +40,34 @@ position = Vector2(109.999985, 83.999985)
 scale = Vector2(9.999998, 9.999998)
 color = Color(0, 0.0333333, 1, 1)
 
+[node name="label1" type="Label" parent="BallContainer1/CanvasModulate"]
+offset_left = 61.5
+offset_top = 43.0
+offset_right = 101.5
+offset_bottom = 66.0
+scale = Vector2(1.75, 1.75)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+text = "100"
+horizontal_alignment = 1
+
 [node name="BallContainer2" type="CanvasLayer" parent="."]
 
 [node name="CanvasModulate" type="CanvasModulate" parent="BallContainer2"]
 position = Vector2(109.999985, 83.999985)
 scale = Vector2(9.999998, 9.999998)
 color = Color(0.10823437, 0.22678858, 1, 1)
+
+[node name="label2" type="Label" parent="BallContainer2/CanvasModulate"]
+offset_left = 106.49999
+offset_top = 43.0
+offset_right = 146.5
+offset_bottom = 66.0
+scale = Vector2(1.75, 1.75)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+text = "100"
+horizontal_alignment = 1
 
 [node name="GUI" type="CanvasLayer" parent="."]
 

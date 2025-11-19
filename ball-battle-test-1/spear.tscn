@@ -4,10 +4,11 @@
 [ext_resource type="Script" uid="uid://blnrk6adv7tf5" path="res://spear.gd" id="2_f1ptq"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f1ptq"]
-radius = 40.0
-height = 260.0
+radius = 38.0
+height = 264.0
 
-[node name="spearArea" type="Area2D"]
+[node name="spearArea" type="Area2D" groups=["weapons"]]
+show_behind_parent = true
 collision_layer = 0
 collision_mask = 0
 script = ExtResource("2_f1ptq")

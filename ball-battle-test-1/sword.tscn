@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://3t0ffoa317pk"]
+
+[ext_resource type="Script" uid="uid://c4xsd6ts6thyw" path="res://sword.gd" id="1_e4ynd"]
+[ext_resource type="Texture2D" uid="uid://fiyajvxy1rxj" path="res://Screenshot 2025-11-13 120806.png" id="2_r76a6"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_74bdg"]
+radius = 64.0
+height = 312.0
+
+[node name="swordArea" type="Area2D" groups=["weapons"]]
+show_behind_parent = true
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_e4ynd")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -90)
+scale = Vector2(0.5, 0.5)
+shape = SubResource("CapsuleShape2D_74bdg")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-0.99999994, -17)
+scale = Vector2(0.35, 0.35)
+texture = ExtResource("2_r76a6")
+offset = Vector2(0, -375)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

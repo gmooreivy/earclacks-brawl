@@ -1,7 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://dn383qa0q1neu"]
+[gd_scene load_steps=9 format=3 uid="uid://dn383qa0q1neu"]
 
 [ext_resource type="Script" uid="uid://c50f0pk4srlf1" path="res://main.gd" id="1_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://b4acr13ihjgi7" path="res://ball.tscn" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://bqrm46wx2otlh" path="res://wall.tscn" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://gmgjokmp6mvv" path="res://spear.tscn" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://3t0ffoa317pk" path="res://sword.tscn" id="4_lquwl"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_lquwl"]
 font_size = 32
@@ -14,28 +17,6 @@ font_size = 48
 
 [node name="Main" type="Node"]
 script = ExtResource("1_1bvp3")
-
-[node name="label1" type="Label" parent="."]
-offset_left = 724.9999
-offset_top = 513.9999
-offset_right = 764.9999
-offset_bottom = 536.9999
-scale = Vector2(1.75, 1.75)
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
-text = "100"
-horizontal_alignment = 1
-
-[node name="label2" type="Label" parent="."]
-offset_left = 1174.9998
-offset_top = 513.9999
-offset_right = 1214.9998
-offset_bottom = 536.9999
-scale = Vector2(1.75, 1.75)
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
-text = "100"
-horizontal_alignment = 1
 
 [node name="WallGroup" type="Node" parent="."]
 
@@ -60,7 +41,30 @@ light_mask = 2
 visibility_layer = 2
 position = Vector2(109.999985, 83.999985)
 scale = Vector2(9.999998, 9.999998)
-color = Color(0, 0.0333333, 1, 1)
+color = Color(0.63303393, 0.4804196, 0, 1)
+
+[node name="Ball1" parent="BallContainer1/CanvasModulate" instance=ExtResource("1_ig7tw")]
+position = Vector2(65, 45)
+scale = Vector2(0.1, 0.1)
+collision_mask = 26
+linear_velocity = Vector2(250, -25)
+
+[node name="weapon1" parent="BallContainer1/CanvasModulate/Ball1" instance=ExtResource("4_lquwl")]
+self_modulate = Color(0, 0, 0, 1)
+show_behind_parent = true
+collision_layer = 4
+collision_mask = 10
+
+[node name="label1" type="Label" parent="BallContainer1/CanvasModulate/Ball1"]
+offset_left = -35.0
+offset_top = -20.000002
+offset_right = 5.0
+offset_bottom = 2.999998
+scale = Vector2(1.75, 1.75)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+text = "100"
+horizontal_alignment = 1
 
 [node name="BallContainer2" type="CanvasLayer" parent="."]
 
@@ -68,6 +72,29 @@ color = Color(0, 0.0333333, 1, 1)
 position = Vector2(109.999985, 83.999985)
 scale = Vector2(9.999998, 9.999998)
 color = Color(0.10823437, 0.22678858, 1, 1)
+
+[node name="Ball2" parent="BallContainer2/CanvasModulate" instance=ExtResource("1_ig7tw")]
+position = Vector2(110, 45)
+scale = Vector2(0.10000002, 0.10000002)
+collision_layer = 2
+collision_mask = 21
+linear_velocity = Vector2(250, -25)
+
+[node name="weapon2" parent="BallContainer2/CanvasModulate/Ball2" instance=ExtResource("2_h2yge")]
+show_behind_parent = true
+collision_layer = 8
+collision_mask = 5
+
+[node name="label2" type="Label" parent="BallContainer2/CanvasModulate/Ball2"]
+offset_left = -35.0
+offset_top = -20.000002
+offset_right = 5.0
+offset_bottom = 2.999998
+scale = Vector2(1.75, 1.75)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+text = "100"
+horizontal_alignment = 1
 
 [node name="GUI" type="CanvasLayer" parent="."]
 
@@ -111,4 +138,8 @@ horizontal_alignment = 1
 [node name="attackTimeout" type="Timer" parent="."]
 wait_time = 0.1
 
+[connection signal="weapon_attack" from="BallContainer1/CanvasModulate/Ball1/weapon1" to="." method="_on_weapon_attack"]
+[connection signal="weapon_parry" from="BallContainer1/CanvasModulate/Ball1/weapon1" to="." method="_on_weapon_parry"]
+[connection signal="weapon_attack" from="BallContainer2/CanvasModulate/Ball2/weapon2" to="." method="_on_weapon_attack"]
+[connection signal="weapon_parry" from="BallContainer2/CanvasModulate/Ball2/weapon2" to="." method="_on_weapon_parry"]
 [connection signal="timeout" from="attackTimeout" to="." method="_on_attack_timeout_timeout"]
