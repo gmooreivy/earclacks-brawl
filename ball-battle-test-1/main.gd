@@ -61,7 +61,14 @@ func end_game(ball, winner, color):
 	await get_tree().create_timer(1.0).timeout
 	victoryText.text = str(winner) + " Wins!"
 	$GUI3/CanvasLayer3.color = color
-	
+
+func is_on_layer(body, layer_number: int) -> bool:
+	if not body or layer_number < 1 or layer_number > 32:
+		return false
+	var layer_bit := 1 << (layer_number - 1)
+	return(body.collision_layer & layer_bit) != 0
+
+
 func toggleLabels(visible):
 	if(visible):
 		label1.show()
@@ -106,11 +113,42 @@ func start_game(newCol1, newCol2, newWeapon1, newWeapon2):
 	reparent_object($label2, ball2)
 	ball1.position = Vector2(65, 35)
 	ball2.position = Vector2(115, 35)
-	ball1.set_collision_layer_bit(1, true)
-	ball1.set_collision_mask_bit()
-#	
 #	Collision Layers
-	#ball1.set_collision_layers()
+	ball1.set_collision_layer_value(1, true)
+	ball1.set_collision_mask_value(2, true)
+	ball1.set_collision_mask_value(4, true)
+	ball1.set_collision_mask_value(5, true)
+	
+	weapon1.set_collision_layer_value(3, true)
+	weapon1.set_collision_mask_value(2, true)
+	weapon1.set_collision_mask_value(4, true)
+	
+	weapon2.set_collision_layer_value(4, true)
+	weapon2.set_collision_mask_value(1, true)
+	weapon2.set_collision_mask_value(3, true)
+	
+	ball2.set_collision_layer_value(2, true)
+	ball2.set_collision_mask_value(1, true)
+	ball2.set_collision_mask_value(3, true)
+	ball2.set_collision_mask_value(5, true)
+	
+	#print("Ball1: " + str(is_on_layer(ball1, 3)))
+	#print("Ball2: " + str(is_on_layer(ball2, 3)))
+	#print("Weapon1: " + str(is_on_layer(weapon1, 3)))
+	#print("Weapon2: " + str(is_on_layer(weapon2, 3)))
+	
+	
+#	SIGNALS
+	connect_signal(weapon1, "weapon_attack", _on_weapon_attack)
+	connect_signal(weapon1, "weapon_parry", _on_weapon_parry)
+	
+	connect_signal(weapon2, "weapon_attack", _on_weapon_attack)
+	connect_signal(weapon2, "weapon_parry", _on_weapon_parry)
+	
+func connect_signal(object, signal_name, method):
+	if not(object.is_connected(signal_name, method)):
+		object.connect(signal_name, method)
+
 func reparent_object(object: Node, new_parent: Node):
 #	FROM GODOT FORUMS
 	# Remove from current parent
@@ -146,7 +184,7 @@ func _on_weapon_attack(angle, damage, collisionLayer) -> void:
 	#print("Damage: ", damage)
 	#print("Layer: ", collisionLayer)
 	#print("-- END --")
-	
+
 	match collisionLayer:
 		1, 2:
 			
@@ -163,7 +201,6 @@ func _on_weapon_attack(angle, damage, collisionLayer) -> void:
 					ball2.health -= damage
 					weapon1.increase_stats()
 					ball2.apply_central_impulse((Vector2(cos(angle), sin(angle)) * thrust))
-			else:print("hit, intangible")
 			
 			if(ball1.health <= 0):
 				end_game(2, weapon2.type, col2)
@@ -172,7 +209,7 @@ func _on_weapon_attack(angle, damage, collisionLayer) -> void:
 
 func _on_weapon_parry(angle: Variant, contactLayer: Variant) -> void:
 	var thrust = Vector2(0, -25)
-	
+	#print("parried")
 	if(tangible):
 		$attackTimeout.start()
 		if(contactLayer == 4) :

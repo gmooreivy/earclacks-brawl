@@ -25,3 +25,5 @@ offset = Vector2(0, -125)
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="weapon_attack" from="." to="." method="_on_weapon_attack"]
+[connection signal="weapon_parry" from="." to="." method="_on_weapon_parry"]

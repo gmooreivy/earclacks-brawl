@@ -16,10 +16,10 @@ font_size = 48
 script = ExtResource("1_1bvp3")
 
 [node name="label1" type="Label" parent="."]
-offset_left = 724.9999
-offset_top = 513.9999
-offset_right = 764.9999
-offset_bottom = 536.9999
+offset_left = -31.999939
+offset_top = -23.999878
+offset_right = 4.571453
+offset_bottom = 3.4286232
 scale = Vector2(1.75, 1.75)
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
@@ -27,10 +27,10 @@ text = "100"
 horizontal_alignment = 1
 
 [node name="label2" type="Label" parent="."]
-offset_left = 1174.9998
-offset_top = 513.9999
-offset_right = 1214.9998
-offset_bottom = 536.9999
+offset_left = -31.999992
+offset_top = -24.0
+offset_right = 4.5712967
+offset_bottom = 3.4285011
 scale = Vector2(1.75, 1.75)
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)

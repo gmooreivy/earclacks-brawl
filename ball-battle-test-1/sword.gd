@@ -23,11 +23,10 @@ func _process(delta):
 	
 
 func _on_body_entered(body: Node2D) -> void:
-	
-	#print(body.get_collision_layer())
+	print("SWORD")
+	print(body.get_collision_layer())
 	var rotationMath = rotation
 	emit_signal("weapon_attack", rotation, damage, body.collision_layer)
-	
 	
 func _on_area_entered(area: Area2D) -> void:
 	rotation_speed *= -1

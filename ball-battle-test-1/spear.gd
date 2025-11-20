@@ -27,7 +27,8 @@ func _process(delta):
 
 func _on_body_entered(body: Node2D) -> void:
 	
-	#print(body.get_collision_layer())
+	print("SPEAR")
+	print(body.get_collision_layer())
 	var rotationMath = rotation
 	emit_signal("weapon_attack", rotation, damage, body.collision_layer)
 	
@@ -38,4 +39,3 @@ func _on_area_entered(area: Area2D) -> void:
 	var spins = abs(roundi(rotationMath / 360))
 	rotationMath = roundi(rotationMath - (spins * 360)) 
 	emit_signal("weapon_parry", rotationMath, area.collision_layer)
-	
