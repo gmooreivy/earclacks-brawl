@@ -14,7 +14,7 @@ func reset_stats():
 	scalar = 0
 
 func increase_stats():
-	scalar += 1
+	scalar += 2
 	damage = scalar
 
 func _process(delta):
@@ -23,12 +23,16 @@ func _process(delta):
 	
 
 func _on_body_entered(body: Node2D) -> void:
+	print("body:", body)
+	print("body layer: ", body.collision_layer, body.get_collision_layer_value(body.collision_layer))
 	var rotationMath = rotation
 	emit_signal("weapon_attack", rotation, damage, body.collision_layer)
 	
 func _on_area_entered(area: Area2D) -> void:
+	print("area:", area)
+	print("area layer: ", area.collision_layer, area.get_collision_layer_value(area.collision_layer))
 	rotation_speed *= -1
 	var rotationMath = rotation_degrees
 	var spins = abs(roundi(rotationMath / 360))
 	rotationMath = roundi(rotationMath - (spins * 360)) 
-	emit_signal("weapon_parry", rotationMath, area.collision_layer, 'sword')
+	emit_signal("weapon_parry", rotationMath, area.collision_layer)

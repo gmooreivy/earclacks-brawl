@@ -15,14 +15,13 @@ extends Node
 const ballScene = preload("res://ball.tscn")
 const spearScene = preload("res://spear.tscn")
 const swordScene = preload("res://sword.tscn")
-const daggerScene = preload("res://dagger.tscn")
-const rapierScene = preload("res://rapier.tscn")
 
 func _ready():
-	start_game('ec00f5', '0008ff', 'rapier', 'spear')
+	#start_game('ec00f5', '0008ff', 'spear', 'sword')
 	update_constants()
 	$GUI/CanvasLayer.color = col1
 	$GUI2/CanvasLayer2.color = col2
+	print(col1, col2)
 	weapon1.rotation_degrees = randi_range(90, 270)
 	weapon2.rotation_degrees = randi_range(90, 270)
 	update_labels()
@@ -98,22 +97,14 @@ func start_game(newCol1, newCol2, newWeapon1, newWeapon2):
 		'spear':
 			weapon1 = spearScene.instantiate()
 		'sword':
-			weapon1 = swordScene.instantiate()
-		'dagger':
-			weapon1 = daggerScene.instantiate()
-		'rapier':
-			weapon1 = rapierScene.instantiate()
+			weapon1 = swordScene
 		
 	match newWeapon2:
 		'spear':
 			weapon2 = spearScene.instantiate()
+			
 		'sword':
 			weapon2 = swordScene.instantiate()
-		'dagger':
-			weapon2 = daggerScene.instantiate()
-		'rapier':
-			weapon2 = rapierScene.instantiate()
-			
 	weapon1.name = "weapon1"
 	weapon2.name = "weapon2"
 	ball1.add_child(weapon1)
@@ -123,19 +114,23 @@ func start_game(newCol1, newCol2, newWeapon1, newWeapon2):
 	ball1.position = Vector2(65, 35)
 	ball2.position = Vector2(115, 35)
 #	Collision Layers
-
-#BITMASKBITMASKBITMASKBITMASKBITMASKBITMASKBITMASKBITMASKBITMASKBITMASKBITMASKBITMASKBITMASK
-	ball1.collision_layer = 0b00000000_00000000_00000000_00000001
-	ball1.collision_mask = 0b00000000_00000000_00000000_00011010
+	ball1.set_collision_layer_value(1, true)
+	ball1.set_collision_mask_value(2, true)
+	ball1.set_collision_mask_value(4, true)
+	ball1.set_collision_mask_value(5, true)
 	
-	weapon1.collision_layer = 0b00000000_00000000_00000000_00000100
-	weapon1.collision_mask = 0b00000000_00000000_00000000_00001010
+	weapon1.set_collision_layer_value(3, true)
+	weapon1.set_collision_mask_value(2, true)
+	weapon1.set_collision_mask_value(4, true)
 	
-	weapon2.collision_layer = 0b00000000_00000000_00000000_00001000
-	weapon2.collision_mask = 0b00000000_00000000_00000000_00000101
+	weapon2.set_collision_layer_value(4, true)
+	weapon2.set_collision_mask_value(1, true)
+	weapon2.set_collision_mask_value(3, true)
 	
-	ball2.collision_layer = 0b00000000_00000000_00000000_00000010
-	ball2.collision_mask = 0b00000000_00000000_00000000_00010101
+	ball2.set_collision_layer_value(2, true)
+	ball2.set_collision_mask_value(1, true)
+	ball2.set_collision_mask_value(3, true)
+	ball2.set_collision_mask_value(5, true)
 	
 	#print("Ball1: " + str(is_on_layer(ball1, 3)))
 	#print("Ball2: " + str(is_on_layer(ball2, 3)))
@@ -164,20 +159,14 @@ func reparent_object(object: Node, new_parent: Node):
 	# Add to new parent
 	new_parent.add_child(object)
 		
-func hit_pause(timeScale, duration, ball, flash):
+func hit_pause(timeScale, duration, ball):
 #	Credits to Master Albert on youtube
-	print(ball)
 	Engine.time_scale = timeScale
-	if(ball == 1 || ball == 3):
-		$BallContainer1/CanvasModulate.color = flash
-	else: if(ball == 2 || ball == 4):
-		$BallContainer2/CanvasModulate.color = flash
-	if(ball != 3 && ball != 4):
-		print("Normal Pause")
-		await(get_tree().create_timer(duration * timeScale).timeout)
-	else:
-		await(get_tree().create_timer(0.4 * timeScale).timeout)
-		print("Short Pause")
+	if(ball == 1):
+		$BallContainer1/CanvasModulate.color = 'FFFFFF'
+	else: if(ball == 2):
+		$BallContainer2/CanvasModulate.color = 'FFFFFF'
+	await(get_tree().create_timer(duration * timeScale).timeout)
 	$BallContainer1/CanvasModulate.color = col1
 	$BallContainer2/CanvasModulate.color = col2
 	Engine.time_scale = 1.0
@@ -197,29 +186,18 @@ func _on_weapon_attack(angle, damage, collisionLayer) -> void:
 	#print("-- END --")
 
 	match collisionLayer:
-		
 		1, 2:
 			
 			var thrust = Vector2(0, -100)
 			if(tangible):
 				update_labels()
 				if(collisionLayer == 1):
-					if(weapon2.type == 'Dagger'):
-						hit_pause(0.05, 0.5, 3, "CCCCCC")
-					else: if(weapon2.type == "Rapier" && weapon2.critStatus):
-						hit_pause(0.025, 0.75, 1, "FFDE59")
-					else:
-						hit_pause(0.025, 0.75, 1, "FFFFFF")
+					hit_pause(0.05, 0.5, 1)
 					ball1.health -= damage
 					weapon2.increase_stats()
 					ball1.apply_central_impulse((Vector2(cos(angle), sin(angle))) * thrust)
 				else:if(collisionLayer == 2):
-					if(weapon1.type == 'Dagger'):
-						hit_pause(0.05, 0.75, 4, "CCCCCC")
-					else: if(weapon1.type == 'Rapier' && weapon1.critStatus):
-						hit_pause(0.025, 0.75, 2, "FFDE59")
-					else:
-						hit_pause(0.025, 0.75, 2, "FFFFFF")
+					hit_pause(0.05, 0.5, 2)
 					ball2.health -= damage
 					weapon1.increase_stats()
 					ball2.apply_central_impulse((Vector2(cos(angle), sin(angle)) * thrust))
@@ -229,8 +207,8 @@ func _on_weapon_attack(angle, damage, collisionLayer) -> void:
 			else: if(ball2.health <= 0):
 				end_game(1, weapon1.type, col1)
 
-func _on_weapon_parry(angle: Variant, contactLayer: Variant, type: Variant) -> void:
-	var thrust = Vector2(0, -250)
+func _on_weapon_parry(angle: Variant, contactLayer: Variant) -> void:
+	var thrust = Vector2(0, -25)
 	#print("parried")
 	if(tangible):
 		$attackTimeout.start()
@@ -241,6 +219,7 @@ func _on_weapon_parry(angle: Variant, contactLayer: Variant, type: Variant) -> v
 		else :
 			ball2.apply_central_impulse((Vector2(cos(angle), sin(angle)) * thrust))
 			weapon2.rotation_speed *= randf_range(1.1, 1.4)
+		hit_pause(0.05, 0.35, 0)
 		tangible = false
 		
 	#print("+ PARRY")

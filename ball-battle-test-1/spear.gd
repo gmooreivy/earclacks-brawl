@@ -18,17 +18,15 @@ func reset_stats():
 
 func increase_stats():
 	scalar += 1
-	damage = scalar
-	scale += Vector2(0, 0.15)
+	damage = floor(scalar / 2)
+	scale += Vector2(0, 0.1)
 
 func _process(delta):
 	rotation += rotation_speed * delta
 	global_position = get_parent().global_position
 
-func _on_body_entered(body: Node2D) -> void:
-	
-	print("SPEAR")
-	print(body.get_collision_layer())
+func _on_body_entered(body: RigidBody2D) -> void:
+
 	var rotationMath = rotation
 	emit_signal("weapon_attack", rotation, damage, body.collision_layer)
 	
@@ -37,5 +35,5 @@ func _on_area_entered(area: Area2D) -> void:
 	rotation_speed *= -1
 	var rotationMath = rotation_degrees
 	var spins = abs(roundi(rotationMath / 360))
-	rotationMath = roundi(rotationMath - (spins * 360)) 
-	emit_signal("weapon_parry", rotationMath, area.collision_layer)
+	rotationMath = roundi(rotationMath - (spins * 360))
+	emit_signal("weapon_parry", rotationMath, area.collision_layer, 'spear')

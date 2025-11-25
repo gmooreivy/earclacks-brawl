@@ -1,18 +1,17 @@
 [gd_scene load_steps=4 format=3 uid="uid://gmgjokmp6mvv"]
 
-[ext_resource type="Script" uid="uid://blnrk6adv7tf5" path="res://spear.gd" id="1_f1ptq"]
 [ext_resource type="Texture2D" uid="uid://k0uxviwxxso2" path="res://spearPlaceholder.png" id="1_rfb2o"]
+[ext_resource type="Script" uid="uid://blnrk6adv7tf5" path="res://spear.gd" id="2_f1ptq"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f1ptq"]
-radius = 44.0
+radius = 38.0
 height = 264.0
 
 [node name="spearArea" type="Area2D" groups=["weapons"]]
 show_behind_parent = true
-scale = Vector2(1, 1.15)
 collision_layer = 0
 collision_mask = 0
-script = ExtResource("1_f1ptq")
+script = ExtResource("2_f1ptq")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
 position = Vector2(0, -64)

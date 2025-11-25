@@ -1,0 +1,56 @@
+[gd_scene load_steps=3 format=3 uid="uid://b8ebtm3xrhdxs"]
+
+[ext_resource type="Script" uid="uid://csupyvq1dfolo" path="res://mainmenu.gd" id="1_cmhrf"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_loy4s"]
+font_size = 64
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cmhrf")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 848.0
+offset_top = 24.0
+offset_right = 1064.0
+offset_bottom = 112.0
+text = "Balls(?)"
+label_settings = SubResource("LabelSettings_loy4s")
+horizontal_alignment = 1
+
+[node name="start" type="Button" parent="."]
+layout_mode = 0
+offset_left = 832.0
+offset_top = 320.0
+offset_right = 1088.0
+offset_bottom = 448.0
+theme_override_font_sizes/font_size = 48
+text = "Play"
+
+[node name="leaderboard" type="Button" parent="."]
+layout_mode = 0
+offset_left = 832.0
+offset_top = 832.0
+offset_right = 1088.0
+offset_bottom = 960.0
+theme_override_font_sizes/font_size = 40
+text = "Leaderboard"
+
+[node name="settings" type="Button" parent="."]
+layout_mode = 0
+offset_left = 832.0
+offset_top = 576.0
+offset_right = 1088.0
+offset_bottom = 704.0
+theme_override_font_sizes/font_size = 48
+text = "Settings"
+
+[connection signal="pressed" from="start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="leaderboard" to="." method="_on_leaderboard_pressed"]
+[connection signal="pressed" from="settings" to="." method="_on_settings_pressed"]
