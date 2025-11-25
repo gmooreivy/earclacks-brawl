@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://dn383qa0q1neu"]
+[gd_scene load_steps=7 format=3 uid="uid://dn383qa0q1neu"]
 
 [ext_resource type="Script" uid="uid://c50f0pk4srlf1" path="res://main.gd" id="1_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://bqrm46wx2otlh" path="res://wall.tscn" id="2_0xm2m"]
@@ -11,6 +11,9 @@ font_size = 32
 
 [sub_resource type="LabelSettings" id="LabelSettings_5vw27"]
 font_size = 48
+
+[sub_resource type="LabelSettings" id="LabelSettings_0xm2m"]
+font_size = 72
 
 [node name="Main" type="Node"]
 script = ExtResource("1_1bvp3")
@@ -110,5 +113,15 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 text = "100"
 horizontal_alignment = 1
+
+[node name="score" type="Label" parent="."]
+offset_left = 832.0
+offset_top = 928.0
+offset_right = 1152.0
+offset_bottom = 1056.0
+text = "0"
+label_settings = SubResource("LabelSettings_0xm2m")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="timeout" from="attackTimeout" to="." method="_on_attack_timeout_timeout"]

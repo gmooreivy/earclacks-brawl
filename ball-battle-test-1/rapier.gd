@@ -29,7 +29,7 @@ func _on_body_entered(body: RigidBody2D) -> void:
 	var dealtDamage = damage
 	if(randi() % 100) <= scalar:
 		critStatus = true
-		dealtDamage *= (scalar / 10) + 1
+		dealtDamage *= (scalar / 25) + 1
 	else: critStatus = false	
 	emit_signal("weapon_attack", rotation, dealtDamage, body.collision_layer)
 	

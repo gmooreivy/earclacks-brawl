@@ -19,7 +19,7 @@ const daggerScene = preload("res://dagger.tscn")
 const rapierScene = preload("res://rapier.tscn")
 
 func _ready():
-	start_game('ec00f5', '0008ff', 'rapier', 'spear')
+	start_game('ec00f5', '0008ff', 'rapier', 'sword')
 	update_constants()
 	$GUI/CanvasLayer.color = col1
 	$GUI2/CanvasLayer2.color = col2
@@ -207,7 +207,7 @@ func _on_weapon_attack(angle, damage, collisionLayer) -> void:
 					if(weapon2.type == 'Dagger'):
 						hit_pause(0.05, 0.5, 3, "CCCCCC")
 					else: if(weapon2.type == "Rapier" && weapon2.critStatus):
-						hit_pause(0.025, 0.75, 1, "FFDE59")
+						hit_pause(0.025, 1, 1, "FFDE59")
 					else:
 						hit_pause(0.025, 0.75, 1, "FFFFFF")
 					ball1.health -= damage
@@ -217,7 +217,7 @@ func _on_weapon_attack(angle, damage, collisionLayer) -> void:
 					if(weapon1.type == 'Dagger'):
 						hit_pause(0.05, 0.75, 4, "CCCCCC")
 					else: if(weapon1.type == 'Rapier' && weapon1.critStatus):
-						hit_pause(0.025, 0.75, 2, "FFDE59")
+						hit_pause(0.025, 1, 2, "FFDE59")
 					else:
 						hit_pause(0.025, 0.75, 2, "FFFFFF")
 					ball2.health -= damage
