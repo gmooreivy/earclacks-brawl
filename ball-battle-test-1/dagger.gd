@@ -19,7 +19,8 @@ func reset_stats():
 func increase_stats():
 	scalar += 100
 	baseRotation += 1.5
-	damage = floor(scalar / 50) + 1
+	damage += 0.75
+	damage = roundi(damage)
 
 func _process(delta):
 	rotation += rotation_speed * delta

@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://dbcvyib3d4tm1"]
+
+[ext_resource type="Script" uid="uid://8nys5riotj4t" path="res://selection.gd" id="1_b8hy4"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k6x3b"]
+size = Vector2(958, 1080)
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_b8hy4")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+position = Vector2(172, 112)
+scale = Vector2(5.3, 4.5)
+color = Color(0.6585908, 0.67674065, 0.6607237, 0.54509807)
+antialiased = true
+polygon = PackedVector2Array(-32.452827, -24.88889, 148.67923, -24.88889, 148.67923, 215.11111, -32.452827, 215.11111)
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+modulate = Color(0, 0.6571003, 0.21367055, 1)
+self_modulate = Color(0.6, 0.6, 0.6, 0.2509804)
+position = Vector2(481, 540)
+shape = SubResource("RectangleShape2D_k6x3b")
+
+[connection signal="ball_select" from="." to="." method="_on_ball_select"]
+[connection signal="input_event" from="Area2D" to="." method="_on_area_2d_input_event"]
+[connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="Area2D" to="." method="_on_area_2d_mouse_exited"]

@@ -12,7 +12,7 @@ $input = json_decode(file_get_contents('php://input'), true);
 
 // Determine the action from a GET parameter
 // This allows the API to handle different actions like 'read', 'create', etc.
-$action = isset($_POST['action']) ? $_POST['action'] : '';
+$action = isset($_GET['action']) ? $_GET['action'] : '';
 
 // Function to send a JSON response and exit
 // This is a helper function to standardize API responses
@@ -47,7 +47,7 @@ switch (strtolower($action)) {
         break;
 
     case 'getplayerscore':
-        $id = $_POST['id'];
+        $id = $_GET['id'];
         $stmt = $pdo->prepare("SELECT user, score FROM leaderboard WHERE id = :id");
         $stmt->execute(['id' => $id]); // Bind the ID parameter
         $data = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch the result as an associative array
@@ -55,9 +55,9 @@ switch (strtolower($action)) {
         break;
     // --- CREATE (POST) ACTION ---
     case 'newplayer':
-        if (isset($_POST['user'], $_POST['score'])) {
-            $user = $_POST['user'];
-            $score = $_POST['score'];
+        if (isset($_GET['user'], $_GET['score'])) {
+            $user = $_GET['user'];
+            $score = $_GET['score'];
             // Use a prepared statement to insert data securely
             $stmt = $pdo->prepare("INSERT INTO leaderboard (user, score) VALUES (:user, :score)");
             $success = $stmt->execute(['user' => $user, 'score' => $score]);
@@ -76,11 +76,11 @@ switch (strtolower($action)) {
         break;
 
     case 'newmatch':
-        if (isset($_POST['player'], $_POST['opponent'], $_POST['matchLength'], $_POST['win'] )) {
-            $player = $_POST['player'];
-            $opponent = $_POST['opponent'];
-            $matchLength  = $_POST['matchLength'];
-            $win = $_POST['win'];
+        if (isset($_GET['player'], $_GET['opponent'], $_GET['matchLength'], $_GET['win'] )) {
+            $player = $_GET['player'];
+            $opponent = $_GET['opponent'];
+            $matchLength  = $_GET['matchLength'];
+            $win = $_GET['win'];
             // Use a prepared statement to insert data securely
             $stmt = $pdo->prepare("INSERT INTO analytics (player, opponent, matchLength, win) VALUES (:player, :opponent, :matchLength, :win)");
             $success = $stmt->execute(['player' => $player, 'opponent' => $opponent, 'matchLength' => $matchLength, 'win' => $win]);
@@ -93,15 +93,16 @@ switch (strtolower($action)) {
             }
         } else {
             // Respond with an error if required fields are missing
-            echo($_POST['opponent']);
+            // echo($_GET['opponent']);
             send_response(["message" => "Missing required fields for creation"], 400);
         }
+        break;
     // --- UPDATE (PUT) ACTION ---
     case 'update':
-        if (isset($_POST['id'], $_POST['user'], $_POST['score'])) {
-            $id = $_POST['id'];
-            $user = $_POST['user'];
-            $score = $_POST['score'];
+        if (isset($_GET['id'], $_GET['user'], $_GET['score'])) {
+            $id = $_GET['id'];
+            $user = $_GET['user'];
+            $score = $_GET['score'];
 
             // Use a prepared statement to update data securely
             $stmt = $pdo->prepare("UPDATE leaderboard SET user = :user, score = :score WHERE id = :id");
@@ -141,7 +142,7 @@ switch (strtolower($action)) {
     // --- DEFAULT (INVALID ACTION) ---
     default:
         // Respond with an error for invalid or missing actions
-        send_response(["message" => "Invalid or missing action parameter"], 400);
+        send_response(["message" => $action], 400);
         break;
 }
 

@@ -12,14 +12,24 @@ extends Node
 @onready var col2 = null
 @onready var tangible = true
 @onready var victoryText = null
+@onready var colid1
+@onready var colid2
 const ballScene = preload("res://ball.tscn")
 const spearScene = preload("res://spear.tscn")
 const swordScene = preload("res://sword.tscn")
 const daggerScene = preload("res://dagger.tscn")
 const rapierScene = preload("res://rapier.tscn")
+const selectScene = preload("res://selection.tscn")
 
 func _ready():
-	start_game('ec00f5', '0008ff', 'rapier', 'sword')
+	var weaponid1 = randi_range(1, 4)
+	var weaponid2 = randi_range(1, 4)
+	while(weaponid2 == weaponid1):
+		weaponid2 = randi_range(1, 4)
+	var hue = randf() * 360
+	colid1 = Color.from_hsv(hue, 1.0, 1.0)
+	colid2 = Color.from_hsv(360 - hue, 1.0, 1.0)
+	start_game(colid1, colid2, weaponid1, weaponid2)
 	update_constants()
 	$GUI/CanvasLayer.color = col1
 	$GUI2/CanvasLayer2.color = col2
@@ -51,6 +61,7 @@ func end_game(ball, winner, color):
 	weapon2.reset_stats()
 	ball1.health = 100
 	ball2.health = 100
+	var selected = ball.selected
 	get_tree().call_group("balls", "queue_free")
 	get_tree().call_group("weapons", "queue_free")
 	victoryText.text = ". . ."
@@ -62,7 +73,9 @@ func end_game(ball, winner, color):
 	await get_tree().create_timer(1.0).timeout
 	victoryText.text = str(winner) + " Wins!"
 	$GUI3/CanvasLayer3.color = color
-
+	await get_tree().create_timer(2.5).timeout
+	if(selected):
+		print("you win :D")
 func is_on_layer(body, layer_number: int) -> bool:
 	if not body or layer_number < 1 or layer_number > 32:
 		return false
@@ -95,23 +108,23 @@ func start_game(newCol1, newCol2, newWeapon1, newWeapon2):
 	$BallContainer1/CanvasModulate.add_child(ball1)
 	$BallContainer2/CanvasModulate.add_child(ball2)
 	match newWeapon1:
-		'spear':
+		1:
 			weapon1 = spearScene.instantiate()
-		'sword':
+		2:
 			weapon1 = swordScene.instantiate()
-		'dagger':
+		3:
 			weapon1 = daggerScene.instantiate()
-		'rapier':
+		4:
 			weapon1 = rapierScene.instantiate()
 		
 	match newWeapon2:
-		'spear':
+		1:
 			weapon2 = spearScene.instantiate()
-		'sword':
+		2:
 			weapon2 = swordScene.instantiate()
-		'dagger':
+		3:
 			weapon2 = daggerScene.instantiate()
-		'rapier':
+		4:
 			weapon2 = rapierScene.instantiate()
 			
 	weapon1.name = "weapon1"
@@ -121,9 +134,13 @@ func start_game(newCol1, newCol2, newWeapon1, newWeapon2):
 	reparent_object($label1, ball1)
 	reparent_object($label2, ball2)
 	ball1.position = Vector2(65, 35)
-	ball2.position = Vector2(115, 35)
+	ball2.position = Vector2(100, 35)
+	weapon1.rotation = 0
+	weapon2.rotation = 0
 #	Collision Layers
-
+	place_bets()
+	await(get_tree().create_timer(0.5))
+	$betHeader.text = ""
 #BITMASKBITMASKBITMASKBITMASKBITMASKBITMASKBITMASKBITMASKBITMASKBITMASKBITMASKBITMASKBITMASK
 	ball1.collision_layer = 0b00000000_00000000_00000000_00000001
 	ball1.collision_mask = 0b00000000_00000000_00000000_00011010
@@ -149,7 +166,16 @@ func start_game(newCol1, newCol2, newWeapon1, newWeapon2):
 	
 	connect_signal(weapon2, "weapon_attack", _on_weapon_attack)
 	connect_signal(weapon2, "weapon_parry", _on_weapon_parry)
-	
+
+func _on_ball_select(ball: Variant) -> void:
+	if(ball == 1):
+		ball1.selected = true
+	else: if(ball == 2):
+		ball2.selected = true
+	else:
+		print("NO BALL SELECTED")
+
+
 func connect_signal(object, signal_name, method):
 	if not(object.is_connected(signal_name, method)):
 		object.connect(signal_name, method)
@@ -164,23 +190,69 @@ func reparent_object(object: Node, new_parent: Node):
 	# Add to new parent
 	new_parent.add_child(object)
 		
+#func hit_pause(timeScale, duration, ball, flash):
+##	Credits to Master Albert on youtube
+	#Engine.time_scale = timeScale
+	#if(ball == 1 || ball == 3):
+		#$BallContainer1/CanvasModulate.color = flash
+	#else: if(ball == 2 || ball == 4):
+		#$BallContainer2/CanvasModulate.color = flash
+	#if(ball != 3 && ball != 4):
+		#await(get_tree().create_timer(duration * timeScale).timeout)
+	#else:
+		#await(get_tree().create_timer(0.4 * timeScale).timeout)
+	#$BallContainer1/CanvasModulate.color = col1
+	#$BallContainer2/CanvasModulate.color = col2
+	#Engine.time_scale = 1.0
 func hit_pause(timeScale, duration, ball, flash):
-#	Credits to Master Albert on youtube
-	print(ball)
-	Engine.time_scale = timeScale
-	if(ball == 1 || ball == 3):
-		$BallContainer1/CanvasModulate.color = flash
-	else: if(ball == 2 || ball == 4):
-		$BallContainer2/CanvasModulate.color = flash
-	if(ball != 3 && ball != 4):
-		print("Normal Pause")
-		await(get_tree().create_timer(duration * timeScale).timeout)
-	else:
-		await(get_tree().create_timer(0.4 * timeScale).timeout)
-		print("Short Pause")
-	$BallContainer1/CanvasModulate.color = col1
-	$BallContainer2/CanvasModulate.color = col2
-	Engine.time_scale = 1.0
+	match ball:
+		1:
+			if(!ball1.stunned):
+				ball1.stunned = true
+				var saved_linear_velocity = Vector2.ZERO
+				var saved_angular_velocity = 0.0
+				var saved_rotation = weapon1.rotation_speed
+				saved_linear_velocity = ball1.linear_velocity
+				saved_angular_velocity = ball1.angular_velocity
+				ball1.linear_velocity = Vector2.ZERO
+				ball1.angular_velocity = 0.0
+				ball1.gravity_scale = 0
+				weapon1.rotation_speed = 0
+				#print(ball1.gravity_scale)
+				#ball1.gravity_scale = 0
+				#ball1.linear_velocity = Vector2(0, 0)
+				#print(ball1.linear_velocity)
+				#weapon1.rotation_speed = 0
+				await(get_tree().create_timer(duration * 3).timeout)
+				ball1.stunned = false
+				ball1.linear_velocity = saved_linear_velocity
+				ball1.angular_velocity = saved_angular_velocity
+				weapon1.rotation_speed = saved_rotation
+				ball1.gravity_scale = 1
+				#ball1.linear_velocity = Vector2(tempvx, tempvy)
+				#weapon1.rotation_speed = temprotation
+				#ball1.gravity_scale = 1
+
+
+
+
+
+
+
+
+
+
+func place_bets():
+	$betHeader.text = str("Place your bets:\n", weapon1.type, " vs. ", weapon2.type)
+	Engine.time_scale = 0.0
+	var selectionWindow1 = selectScene.instantiate()
+	var selectionWindow2 = selectScene.instantiate()
+	
+	$GUI/CanvasLayer.add_child(selectionWindow1)
+	$GUI2/CanvasLayer2.add_child(selectionWindow2)
+	selectionWindow1.ball = 1
+	selectionWindow2.ball = 2
+	selectionWindow2.position = Vector2(960, 0)
 	
 func update_labels():
 	
@@ -225,9 +297,9 @@ func _on_weapon_attack(angle, damage, collisionLayer) -> void:
 					ball2.apply_central_impulse((Vector2(cos(angle), sin(angle)) * thrust))
 			
 			if(ball1.health <= 0):
-				end_game(2, weapon2.type, col2)
+				end_game(ball2, weapon2.type, col2)
 			else: if(ball2.health <= 0):
-				end_game(1, weapon1.type, col1)
+				end_game(ball1, weapon1.type, col1)
 
 func _on_weapon_parry(angle: Variant, contactLayer: Variant, type: Variant) -> void:
 	var thrust = Vector2(0, -250)

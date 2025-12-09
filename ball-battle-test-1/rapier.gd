@@ -39,17 +39,5 @@ func _on_area_entered(area: Area2D) -> void:
 	var rotationMath = rotation_degrees
 	var spins = abs(roundi(rotationMath / 360))
 	rotationMath = roundi(rotationMath - (spins * 360)) 
-	emit_signal("weapon_parry", rotationMath, area.collision_layer, 'dagger')
+	emit_signal("weapon_parry", rotationMath, area.collision_layer)
 	
-
-
-func _on_weapon_attack(angle: Variant, weapon_damage: Variant, parent: Variant, contactLayer: Variant) -> void:
-	pass # Replace with function body.
-
-
-func _on_weapon_parry(angle: Variant, contactLayer: Variant) -> void:
-	pass # Replace with function body.
-
-
-func _on_area_exited(area: Area2D) -> void:
-	pass # Replace with function body.

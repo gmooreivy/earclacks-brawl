@@ -32,6 +32,7 @@ enabled=PackedStringArray("res://addons/runtime_debug_tools/plugin.cfg")
 
 balls=""
 weapons=""
+selectors=""
 
 [layer_names]
 
@@ -46,3 +47,7 @@ weapons=""
 
 2d/default_gravity=850.0
 2d/default_linear_damp=0.0
+
+[rendering]
+
+environment/defaults/default_clear_color=Color(0.50928557, 0.5092865, 0.5092855, 1)
