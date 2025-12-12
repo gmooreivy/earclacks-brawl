@@ -20,7 +20,10 @@ func _on_area_2d_input_event(viewport: Node, event: InputEvent, shape_idx: int) 
 	if (event is InputEventMouseButton):
 		if(event.pressed):
 			print("It click :D")
-			selected = true
 			Engine.time_scale = 1.0
 			emit_signal("ball_select", ball)
 			get_tree().call_group("selectors", "queue_free")
+
+
+func _on_ball_select(ball: Variant) -> void:
+	selected = true

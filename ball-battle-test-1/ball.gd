@@ -10,7 +10,3 @@ func _process(delta) -> void:
 	if(rotation >= 1 || rotation <= -1):
 		print(rotation)
 		rotation = 0;
-#		set up custom gravity
-func configCollision():
-	pass
-#	set up collision layers YOU MORON ITS PER OBJECT DO IT IN THE OTHER FUNCTION IN MAIN NVM NVM NVM

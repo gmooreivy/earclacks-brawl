@@ -1,8 +1,10 @@
 extends Control
+@onready var id = 0
 func _ready() -> void:
 	if(FileAccess.file_exists("user://username.save")):
 		var save_file = FileAccess.open("user://username.save", FileAccess.READ)
 		var parsed_data = JSON.parse_string(save_file.get_line())
+#		add ID detection
 		$LineEdit.placeholder_text = parsed_data['user']
 		
 func _on_button_pressed() -> void:

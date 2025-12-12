@@ -3,8 +3,10 @@ signal weapon_attack(angle, weapon_damage, parent, contactLayer)
 signal weapon_parry(angle, contactLayer)
 var rotation_speed = 7.4
 var damage = 2
-var scalar = 20
+var scalar = 5
 var baseRotation = 7.4
+var stun_time = 0.25
+var stun_color = "CCCCCC"
 var critStatus = false
 const scalarattr = "Crit chance/damage"
 const type = "Rapier"
@@ -13,7 +15,7 @@ func reset_stats():
 	damage = 3
 	rotation_speed = 7.4
 	critStatus = false
-	scalar = 10
+	scalar = 5
 
 	
 
@@ -28,9 +30,15 @@ func _process(delta):
 func _on_body_entered(body: RigidBody2D) -> void:
 	var dealtDamage = damage
 	if(randi() % 100) <= scalar:
+		stun_time = 0.75
+		stun_color = "#FFD15D"
 		critStatus = true
 		dealtDamage *= (scalar / 25) + 1
-	else: critStatus = false	
+	else:
+		stun_color = "CCCCCC"
+		critStatus = false
+		stun_time = 0.25
+		
 	emit_signal("weapon_attack", rotation, dealtDamage, body.collision_layer)
 	
 	

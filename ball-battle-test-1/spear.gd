@@ -4,7 +4,9 @@ signal weapon_parry(angle, contactLayer)
 var rotation_speed = 6.2
 var damage = 1
 var scalar = 1
+var stun_time = 0.35
 var baseRotation = 6.2
+var stun_color = "CCCCCC"
 const scalarattr = "Length/Damage"
 const type = "Spear"
 
@@ -36,4 +38,4 @@ func _on_area_entered(area: Area2D) -> void:
 	var rotationMath = rotation_degrees
 	var spins = abs(roundi(rotationMath / 360))
 	rotationMath = roundi(rotationMath - (spins * 360))
-	emit_signal("weapon_parry", rotationMath, area.collision_layer, 'spear')
+	emit_signal("weapon_parry", rotationMath, area.collision_layer)
