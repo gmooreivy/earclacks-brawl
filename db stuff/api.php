@@ -9,7 +9,13 @@ header("Content-Type: application/json");
 // Retrieve input data from the request body
 // json_decode converts JSON input into a PHP associative array
 $input = json_decode(file_get_contents('php://input'), true);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && strpos($_SERVER['CONTENT_TYPE'], 'application/json') === 0) {
+    $_POST = json_decode(file_get_contents('php://input'), true) ?? [];
+}
 
+// if ($_SERVER['REQUEST_METHOD'] === 'GET' && strpos($_SERVER['CONTENT_TYPE'], 'application/json') === 0) {
+//     $_GET = json_decode(file_get_contents('php://input'), true) ?? [];
+// }
 // Determine the action from a GET parameter
 // This allows the API to handle different actions like 'read', 'create', etc.
 $action = isset($_GET['action']) ? $_GET['action'] : '';
@@ -37,6 +43,13 @@ switch (strtolower($action)) {
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch the result as an associative array 
         send_response($data); // Send the user data as a response
         break;
+    
+    case 'getallscores':
+        // Use a prepared statement to prevent SQL injection
+        $stmt = $pdo->query("SELECT user, score FROM leaderboard ORDER BY score DESC");
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch the result as an associative array 
+        send_response($data); // Send the user data as a response
+        break;
 
     case 'getanalytics':
 
@@ -46,6 +59,27 @@ switch (strtolower($action)) {
         send_response($data); // Send the user data as a response
         break;
 
+
+    case 'checkuser':
+        if (isset($_GET['user'])) {
+            $user = $_GET['user'];
+            echo $user;
+            $stmt = $pdo->query("SELECT * FROM leaderboard WHERE user = :user");
+            $stmt->execute(['user' => $user]);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            echo($data);
+            // send_response($data);
+            // if ($stmt->rowCount() > 0) {
+            //     send_response(true);
+            // }
+            // else {
+            //     send_response(false);   
+            // }
+            // if($data > 0){send_response(true);}
+            // else{send_response(false);}
+        }
+        break;
+
     case 'getplayerscore':
         $id = $_GET['id'];
         $stmt = $pdo->prepare("SELECT user, score FROM leaderboard WHERE id = :id");
@@ -53,14 +87,15 @@ switch (strtolower($action)) {
         $data = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch the result as an associative array
         send_response($data); // Send the user data as a response
         break;
-    // --- CREATE (POST) ACTION ---
+    // --- CREATE (GET) ACTION ---
     case 'newplayer':
-        if (isset($_GET['user'], $_GET['score'])) {
-            $user = $_GET['user'];
-            $score = $_GET['score'];
+        echo("New player called");
+        echo($_POST['user']);
+        if (isset($_POST['user'])) {
+            $user = $_POST['user'];
             // Use a prepared statement to insert data securely
             $stmt = $pdo->prepare("INSERT INTO leaderboard (user, score) VALUES (:user, :score)");
-            $success = $stmt->execute(['user' => $user, 'score' => $score]);
+            $success = $stmt->execute(['user' => $user, 'score' => 0]);
             
 
             if ($success) {
@@ -70,8 +105,7 @@ switch (strtolower($action)) {
                 send_response(["message" => "Error creating user"], 500);
             }
         } else{
-            // echo($input['user']);
-            // echo($input['score']);
+    
         }
         break;
 
@@ -93,20 +127,38 @@ switch (strtolower($action)) {
             }
         } else {
             // Respond with an error if required fields are missing
-            // echo($_GET['opponent']);
+            echo($_POST['matchlength']);
             send_response(["message" => "Missing required fields for creation"], 400);
         }
-        break;
     // --- UPDATE (PUT) ACTION ---
-    case 'update':
-        if (isset($_GET['id'], $_GET['user'], $_GET['score'])) {
-            $id = $_GET['id'];
+    case 'updatescore':
+        if (isset($_GET['user'], $_GET['score'])) {
             $user = $_GET['user'];
             $score = $_GET['score'];
 
             // Use a prepared statement to update data securely
-            $stmt = $pdo->prepare("UPDATE leaderboard SET user = :user, score = :score WHERE id = :id");
-            $success = $stmt->execute(['user' => $user, 'score' => $score, 'id' => $id]);
+            $stmt = $pdo->prepare("UPDATE leaderboard SET score = :score WHERE user = :user");
+            $success = $stmt->execute(['user' => $user, 'score' => $score]);
+
+            if ($success) {
+                send_response(["message" => "User updated successfully"]);
+            } else {
+                send_response(["message" => "Error updating user"], 500);
+            }
+        } else {
+            // Respond with an error if required fields are missing
+            send_response(["message" => "Missing required ID or fields for update"], 400);
+        }
+        break;
+
+    case 'updateuser':
+        if (isset($_GET['user'], $_GET['newname'])) {
+            $user = $_GET['user'];
+            $newname = $_GET['newname'];
+
+            // Use a prepared statement to update data securely
+            $stmt = $pdo->prepare("UPDATE leaderboard SET user = :newname WHERE user = :user");
+            $success = $stmt->execute(['user' => $user, 'newname' => $newname]);
 
             if ($success) {
                 send_response(["message" => "User updated successfully"]);
@@ -135,6 +187,7 @@ switch (strtolower($action)) {
             }
         } else {
             // Respond with an error if the ID is missing
+            echo($_POST['id']);
             send_response(["message" => "Missing required ID for delete"], 400);
         }
         break;
@@ -142,7 +195,7 @@ switch (strtolower($action)) {
     // --- DEFAULT (INVALID ACTION) ---
     default:
         // Respond with an error for invalid or missing actions
-        send_response(["message" => $action], 400);
+        send_response(["message" => "Invalid or missing action parameter"], 400);
         break;
 }
 
