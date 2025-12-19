@@ -67,6 +67,10 @@ func _process(float) -> void:
 		if(ball2.linear_velocity.y > 1000 || ball2.linear_velocity.y < -1000):
 			ball2.linear_velocity.y *= 0.5
 			print(ball2.linear_velocity)
+		if(ball1.health <= 0):
+			end_game(ball2, weapon2.type, col2)
+		else: if(ball2.health <= 0):
+			end_game(ball1, weapon1.type, col1)
 			
 		#if(ball2.linear_velocity > 30 || ball2.linear_velocity < -30):
 			#ball2.linear_velocity *= Vector2(0.9, 0.9)
@@ -95,28 +99,26 @@ func end_game(ball, winner, color):
 	victoryText.text = str(winner) + " Wins!"
 	label1 = Label.new()
 	label2 = Label.new()
-	await get_tree().create_timer(2.5).timeout
-	victoryText.text = " "
 	if(selected):
 		var curScore = int($score.text)
 		curScore += 1
 		$score.text = str(curScore)
-		_ready()
+		
 	else:
 		save_score(int($score.text))
+	await get_tree().create_timer(2.5).timeout
+	victoryText.text = " "
+	if(selected):
+		_ready()
+	else:
 		get_tree().change_scene_to_file("res://mainmenu.tscn")
-func is_on_layer(body, layer_number: int) -> bool:
-	if not body or layer_number < 1 or layer_number > 32:
-		return false
-	var layer_bit := 1 << (layer_number - 1)
-	return(body.collision_layer & layer_bit) != 0
 
 func save_score(score):
 	if(FileAccess.file_exists("user://username.save")):
 		var save_file = FileAccess.open("user://username.save", FileAccess.READ)
 		var parsed_data = JSON.parse_string(save_file.get_line())
 		var username = parsed_data['user']
-		var curScore = parsed_data['score']
+		var curScore = floori(parsed_data['score'])
 		if(score > curScore):
 			var data = {
 				'user': username,
@@ -125,6 +127,21 @@ func save_score(score):
 			var user_file = FileAccess.open("user://username.save", FileAccess.WRITE)
 			var json_data = JSON.stringify(data)
 			user_file.store_line(json_data)
+			var requestString = "http://localhost/earclash/api.php?action=updatescore&user=%s&score=%s"
+			var url = requestString % [username, score]
+			print(url)
+			print("Score saved")
+			$HTTPRequest.request_completed.connect(_on_request_completed)
+			$HTTPRequest.request(url)
+			
+func _on_request_completed(result, response_code, headers, body):
+	var body_text = body.get_string_from_utf8()
+	if (response_code == 200 or response_code == 201):
+		print("Score saved successfully: %s" % body_text)
+		get_tree().change_scene_to_file("res://mainmenu.tscn")
+	else:
+		print("Failed to save score: %d, body: %s" % [response_code, body_text])
+	
 func toggleLabels(visible):
 	if(visible):
 		label1.show()
@@ -268,9 +285,7 @@ func reparent_object(object: Node, new_parent: Node):
 	#$BallContainer2/CanvasModulate.color = col2
 	#Engine.time_scale = 1.0
 func hit_pause(duration, ball, flash):
-	Engine.time_scale = 0.05
-	await(get_tree().create_timer(0.05 * 0.05).timeout)
-	Engine.time_scale = 1
+	impact_freeze(duration)
 	match ball:
 		1:
 			if(is_instance_valid(ball1)):
@@ -319,6 +334,11 @@ func hit_pause(duration, ball, flash):
 						ball2.linear_velocity = saved_speed
 						weapon2.rotation_speed = saved_rotation
 						weapon2.baseRotation = saved_rotation
+func impact_freeze(duration):
+	Engine.time_scale = 0.05
+	await(get_tree().create_timer(0.025).timeout)
+	Engine.time_scale = 1
+	
 func place_bets():
 	$betHeader.text = str("Place your bets:\n", weapon1.type, " vs. ", weapon2.type)
 	Engine.time_scale = 0.0
@@ -364,11 +384,7 @@ func _on_weapon_attack(angle, damage, collisionLayer) -> void:
 					weapon1.increase_stats()
 					await(hit_pause(weapon1.stun_time, 2, weapon1.stun_color))
 					#ball2.apply_central_impulse((Vector2(cos(angle), sin(angle)) * thrust))
-			if(is_instance_valid(ball1)):
-				if(ball1.health <= 0):
-					end_game(ball2, weapon2.type, col2)
-				else: if(ball2.health <= 0):
-					end_game(ball1, weapon1.type, col1)
+			
 
 func _on_weapon_parry(angle: Variant, contactLayer: Variant) -> void:
 	var thrust = Vector2(0, -250)

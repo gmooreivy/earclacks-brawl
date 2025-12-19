@@ -24,8 +24,8 @@ func increase_stats():
 		rotation_speed += 2.5
 	else: rotation_speed -= 2.5
 	baseRotation = rotation_speed
-	if((scalar / 10) % 2 == 0):
-		damage += 10
+	if((scalar / 10) % 10 == 0):
+		damage += 2
 	print(rotation_speed)
 
 func _process(delta):

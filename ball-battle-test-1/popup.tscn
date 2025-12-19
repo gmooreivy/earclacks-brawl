@@ -43,4 +43,6 @@ offset_bottom = 912.0
 theme_override_font_sizes/font_size = 32
 text = "Confirm"
 
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

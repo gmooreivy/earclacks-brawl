@@ -116,4 +116,6 @@ offset_bottom = 688.0
 label_settings = SubResource("LabelSettings_h2yge")
 horizontal_alignment = 1
 
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+
 [connection signal="timeout" from="attackTimeout" to="." method="_on_attack_timeout_timeout"]

@@ -5,15 +5,14 @@ func _ready():
 	$HTTPRequest.request("http://localhost/earclash/api.php?action=getscores")
 	
 func _on_request_completed(result, response_code, headers, body):
-	
+	#print(body)
 	var json_string = body.get_string_from_utf8()
-	print(typeof(body))
 	var iverystronglydislikejsonformatting = JSON.new()
 	
 	var json_result = iverystronglydislikejsonformatting.parse(json_string)
 	var json_data = iverystronglydislikejsonformatting.data
 	print(json_data)
-	print(json_result)
+
 	
 	var players: Array = json_data
 	var boardindex = 1
